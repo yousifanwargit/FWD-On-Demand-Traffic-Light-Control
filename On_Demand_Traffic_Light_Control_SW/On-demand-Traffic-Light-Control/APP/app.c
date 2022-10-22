@@ -13,23 +13,22 @@ pin_config_t buttonPin = {
 	.PIN = GPIO_PIN2
 };
 
-uint8 val2 = 0;
-uint8 val1 = 0;
+uint8 val = 0;
 
 
 ISR(INT0_vect){
 
 	TIMER0_DelayInMilliSec(500);
-	GPIO_PIN_READ_LOGIC(&buttonPin, &val2);
+	GPIO_PIN_READ_LOGIC(&buttonPin, &val);
 	
-	if (val2 != val1)
+	if (val == 0)
 	{
 		// long press detected
 		// nothing here
 		// return immediately to continue normal mode
 		//return;
 	}
-	else if (val2 == val1)
+	else if (val != 0)
 	{
 		// there is on long press
 		// check for current state (cars)
@@ -100,9 +99,12 @@ void appInit(void){
 	All_Lights_init();
 }
 void appStart(void){
-	// enable external interrupt 0
-	EXT_INT_enable(INT0);
-	// call normal mode function
-	LIGHTS_NormalMode();
+	while(1){
+		// enable external interrupt 0
+		EXT_INT_enable(INT0);
+		// call normal mode function
+		LIGHTS_NormalMode();
+		
+	}
 	
 }
